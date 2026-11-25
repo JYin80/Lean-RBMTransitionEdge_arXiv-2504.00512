@@ -1,0 +1,114 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+# formalization.yaml v0.4, for Palomar (https://palomar-registry.org/).
+version: "v0.4"
+
+project:
+  name: "Localization-delocalization transition for a random block matrix model"
+  description: >-
+    A Lean 4 / Mathlib proof of the main results of Fan, Stone, Yang and Yin, "Localization-delocalization
+    transition for a random block matrix model" (arXiv:2504.00512). The model is H_Lambda = H + Lambda,
+    complex Hermitian case: H has D >= 2 independent N x N Wigner blocks on the diagonal, with entry laws
+    whose moments are bounded by given constants (Assumption 1), and Lambda places a deterministic A and A*
+    on the cyclic off-diagonal blocks. This entry contains Theorem 2.1 (delocalized regime: under
+    ||A|| <= N^{-delta_A} and (2.4), every eigenvector puts mass 1/D + O(N^{-c}) on each block, (2.5)) and
+    Theorem 2.5 (localized regime: the eigenvalue shift bounds (2.10), (2.11) and the comparison of the local
+    correlation functions with those of H). Both are stated in uniform form (constants chosen before N, then
+    every N >= N_0, every entry law with the given moment constants, every admissible A and every k) and
+    have no hypotheses other than their parameters; no result of another work is assumed for them. The
+    library also proves Theorem 2.2 and Theorem 2.4, each from one external input stated as an explicit
+    hypothesis; those two are not part of this entry.
+  authors:
+    - "Jun Yin"
+  license: "Apache-2.0"
+  responsible_maintainers:
+    - "Jun Yin"
+
+classification:
+  arxiv: ["math.PR", "math-ph"]
+  msc2020: ["60B20", "15B52", "82B44"]
+
+sources:
+  - title: "Localization-delocalization transition for a random block matrix model"
+    authors:
+      - "Jiaqi Fan"
+      - "Bertrand Stone"
+      - "Fan Yang"
+      - "Jun Yin"
+    id: "arXiv:2504.00512"
+    type: "paper"
+    location: "https://arxiv.org/abs/2504.00512"
+    relationship: "formalizes"
+    note: >-
+      The Lean code follows paper/FanStoneYangYin_RBMTransitionEdge_Lean_version.pdf in this repository (arXiv version
+      2 with corrections, same numbering); equation and theorem numbers in docs/PAPER-VS-LEAN.md refer to it.
+      Jun Yin, a co-author of the paper, is the author of the formalization.
+    license: "unknown"
+    author_endorsement: "not-contacted"
+
+related_formalizations: []
+
+status:
+  scope: >-
+    In this entry (Challenge.lean): Theorems 2.1 and 2.5. Also proved in the library, not in this entry:
+    Theorem 2.2 (edge universality in the delocalized regime), which takes the edge universality of Dyson
+    Brownian motion (Landon-Yau) as the explicit hypothesis RBMTransitionEdge.LandonYauEdge, and Theorem 2.4
+    (eigenvector localization), which takes the level repulsion (5.14) between two independent Wigner blocks
+    as the explicit hypothesis RBMTransitionEdge.EI2Hyp (RBMTransitionEdge.main_theorems in RBMTransitionEdge/Main/Main.lean;
+    docs/PAPER-VS-LEAN.md). Not formalized: the real symmetric case.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: []
+
+automation:
+  methods:
+    - method: "agent"
+      models: ["claude-opus-5-5", "claude-sonnet-5-5", "claude-fable-5-1", "claude-fable-5-2"]
+      framework: "Claude Code"
+      tool_setup: >-
+        AI-assisted: a team of Claude Code agents (a dispatcher, workers on ticket worktrees and reviewing
+        agents) wrote the Lean code and the comparison documents from the paper's source, under the direction
+        of Jun Yin, who fixed the endpoint statements. The port to the Lean module system and the
+        Challenge/Solution files for Palomar were also written with Claude.
+      cost:
+        wall_time: "about 87 hours of active work between 2026-11-19 and 2026-11-24 (384 commits in the work repository; the run was paused for long stretches in between)"
+        spend_usd: "not tracked"
+        hardware: "local machine"
+      prompting_notes: "n/a"
+  spend_usd: "not tracked"
+  notes: >-
+    The mathematical source is a paper by Jiaqi Fan, Bertrand Stone, Fan Yang and Jun Yin. The Lean proofs
+    were produced by AI agents; the statements of the main theorems and of the definitions they use were
+    fixed and checked by Jun Yin against the paper.
+
+fidelity:
+  divergences: >-
+    (1) The statements are in uniform form: constants are chosen before N, which is the paper's "for N
+    sufficiently large" uniformly in the entry law, A and k. (2) The events about the eigenvector of
+    lambda_k hold for every unit eigenvector. (3) For D = 2, Lambda = [[0, A], [A*, 0]]. (4) (2.10) has a
+    strict inequality, and the correlation comparison of Theorem 2.5 is stated for the correlation functions
+    rho^(n) (a strengthening of the printed form). (5) Some proofs take a different route from the paper.
+    Details: docs/PAPER-VS-LEAN.md.
+
+review:
+  status: "agent-reviewed"
+  reviewers: []
+  notes: >-
+    The Lean proof of each ticket was audited by a separate auditing agent, and a supervising agent checked
+    the final statements. Jun Yin checked the statements of the main theorems and of the definitions they use
+    against the paper. No independent human review has been performed.
+
+alignment:
+  namespace: "RBMTransitionEdge"
+  statements:
+    - source: "Theorem 2.1, (2.5)"
+      lean: "RBMTransitionEdge.theorem_2_1"
+      module: "Challenge"
+      status: "proved"
+      note: "The statement is RBMTransitionEdge.MixStatement; proved in Solution.lean by RBMTransitionEdge.mix."
+    - source: "Theorem 2.5, (2.10)-(2.11) and the correlation functions"
+      lean: "RBMTransitionEdge.theorem_2_5"
+      module: "Challenge"
+      status: "proved"
+      note: "The statement is RBMTransitionEdge.LocalizedEvalStatement; proved in Solution.lean by RBMTransitionEdge.localized_eval."
+
+acknowledgements: "Mathlib and the Lean community; Lean 4 (Lean FRO); Claude Code (Anthropic)."
