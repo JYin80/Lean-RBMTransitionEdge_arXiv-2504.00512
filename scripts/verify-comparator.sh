@@ -3,10 +3,13 @@ set -euo pipefail
 
 # Judge Solution against Challenge the way Palomar does: with the `lake
 # comparator` that ships in this project's own toolchain, replaying the proof
-# through Lean's kernel and the toolchain's bundled independent kernels
-# (NanoDa and con-ron). Nothing is built from a pin; everything that judges
-# comes from `lean-toolchain`, which Palomar requires to be v4.35.0-rc2 or
-# later.
+# through Lean's kernel and the toolchain's bundled NanoDa, the two kernels
+# Palomar requires. Palomar then replays the solution through the bundled
+# con-ron on its own and only warns when con-ron declines or runs out of fuel
+# (PalomarSubmission scripts/verify_submission.py and
+# scripts/kernel_outcomes.py); that advisory replay is not repeated here.
+# Nothing is built from a pin; everything that judges comes from
+# `lean-toolchain`, which Palomar requires to be v4.35.0-rc2 or later.
 repository_root=$(cd "$(dirname "$0")/.." && pwd)
 cd "$repository_root"
 
@@ -52,7 +55,6 @@ if "external_kernels" in config:
 config.pop("enable_nanoda", None)
 config["external_kernels"] = {
     "nanoda": [f"{prefix}/bin/nanoda_bin"],
-    "con-ron": [f"{prefix}/bin/con-ron"],
 }
 pathlib.Path(destination).write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
 PY
